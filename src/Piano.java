@@ -1,6 +1,7 @@
 package com.kilby;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ public class Piano
 	
 	private JButton[] buttons = new JButton[89];
 	private String[] buttonText = new String[89];//{"1", "2", "3", "4", "5", "6", "7", "8"};
+	private Color[] keyColor;
 	
 	private JButton staccato = new JButton("Staccato");
 	private JButton legato  = new JButton("Legato");
@@ -30,6 +32,22 @@ public class Piano
 	
 	public Piano()
 	{
+		keyColor = new Color[12]; 
+			
+			keyColor[0] = Color.white;
+			keyColor[1] = Color.black;
+			keyColor[2] = Color.white;
+			keyColor[3] = Color.black;
+			keyColor[4] = Color.white;
+			
+			keyColor[5] = Color.white;
+			keyColor[6] = Color.black;
+			keyColor[7] = Color.white;
+			keyColor[8] = Color.black;
+			keyColor[9] = Color.white;
+			keyColor[10] = Color.black;
+			keyColor[11] = Color.white;
+		
 		Synthesizer synth = null;
 		try
 		{
@@ -58,14 +76,28 @@ public class Piano
 		
 		
 		//starting not music
-		panel1.setLayout(new GridLayout(5,5));
+		panel1.setLayout(new GridLayout(1,88));
 		
-		
+		int colorLoopCounter = 0;
 		for(int x = 1; x < buttons.length; x++)
 		{
-			buttonText[x] = Integer.toString(x);
-			panel1.add(buttons[x] = new JButton(buttonText[x]));
-			buttons[x].addActionListener(play);
+			if(colorLoopCounter < 12)
+			{
+				buttonText[x] = Integer.toString(x);
+				panel1.add(buttons[x] = new JButton(buttonText[x]));
+				buttons[x].setBackground(keyColor[colorLoopCounter]);
+				buttons[x].addActionListener(play);
+				colorLoopCounter++;
+			}
+			else
+			{
+				colorLoopCounter = 0;
+				buttonText[x] = Integer.toString(x);
+				panel1.add(buttons[x] = new JButton(buttonText[x]));
+				buttons[x].setBackground(keyColor[colorLoopCounter]);
+				buttons[x].addActionListener(play);
+				colorLoopCounter++;
+			}
 		}
 		
 		OptionChecker check = new OptionChecker();
@@ -73,12 +105,14 @@ public class Piano
 		staccato.addActionListener(check);
 		legato.addActionListener(check);
 		
-		panel1.add(staccato);
-		panel1.add(legato);
+
 		
 		JFrame frame = new JFrame("Piano");
 		frame.setLayout(new BorderLayout(5,5));
 		frame.add(panel1, BorderLayout.CENTER);
+		frame.add(staccato, BorderLayout.EAST);
+		frame.add(legato, BorderLayout.WEST);
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1200,200);
 		frame.setVisible(true);
